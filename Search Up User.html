@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login System</title>
+          <style>
+                 @keyframes rainbow {
+  0% { color: red; }
+  16.666% { color: orange; }
+  33.333% { color: yellow; }
+  50% { color: green; }
+  66.666% { color: blue; }
+  83.333% { color: indigo; }
+  100% { color: violet; }
+}
+
+/* Apply the rainbow animation to the username */
+.rainbow-animation {
+  animation: rainbow 2s infinite;
+}
+       body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #800080 20%, #00008B 80%);
+    overflow: hidden;
+}
+   
+         
+                  .banner {
+    position: absolute;
+    top: 0;
+    width: 400px;
+    height: 500px;
+    background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,255,0.5));
+    border-left: 4px solid rgba(0,0,255,0.5); /* Blue border */
+    border-top-right-radius: 10px; /* Rounded corner */
+    border-bottom-right-radius: 10px; /* Rounded corner */
+    overflow: hidden; /* Hide overflowing content */
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(0,0,255,0.5); /* Blue glow */
+    z-index: 999; /* Ensure it's above other elements */
+  }
+
+  /* Text inside the banner */
+  .banner-text {
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+         .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it's above all other content */
+  }
+
+  /* Styles for loading spinner */
+  .spinner {
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #333;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Hide content until loaded */
+  body {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Your existing HTML content goes here -->
+
+<script>
+        function hasOwnerBadge() {
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  return loggedInUser && loggedInUser.badges.includes("Owner.webp");
+}
+
+// Function to apply rainbow animation to the username
+function applyRainbowAnimation() {
+  const loggedInUserSpan = document.getElementById("loggedInUser");
+  loggedInUserSpan.classList.add("rainbow-animation");
+}
+
+// Event listener for page load to check for the badge and apply animation
+document.addEventListener("DOMContentLoaded", function() {
+  if (hasOwnerBadge()) {
+    applyRainbowAnimation();
+  }
+});
+           document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('Right-clicking is disabled on this website.');
+    });
+
+    // Prevent Ctrl + U
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            alert('Viewing page source is disabled on this website.');
+        }
+    });
+    window.addEventListener('devtoolschange', function(event) {
+        if (event.detail.isOpen) {
+            // Redirect to another page
+            window.location.replace("https://example.com/redirected-page");
+        }
+    });
+
+    // Function to detect if dev tools are open
+    function checkDevTools() {
+        let isOpen = false;
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        isOpen = widthThreshold || heightThreshold;
+
+        // Dispatch event indicating dev tools state
+        const event = new CustomEvent('devtoolschange', { detail: { isOpen } });
+        window.dispatchEvent(event);
+    }
+
+    // Check for dev tools periodically
+    setInterval(checkDevTools, 1000);
+window.addEventListener('load', function() {
+  // Remove loading overlay and show content
+  document.querySelector('.loading-overlay').style.display = 'none';
+  document.body.style.display = 'block';
+});
+</script>
+</head>
+<body>
+<div class="banner" style=" width: 500px;" id="userInfo" style="display: none;">
+  <p class="banner-text"><span style=" font-size: 25px;" id="loggedInUser"></span>!</p>
+  <img class="banner-text" style="width: 150px; margin-left: 165px;" src="" alt="Profile Picture" id="profileImg">
+  <div class="user-info-containe">
+    <!-- Separate containers for tokens, badges, and roles -->
+    <div class="user-info-section">
+      <p class="banner-text">Tokens: <span id="userTokens"></span></p>
+    </div>
+    <div class="user-info-section">
+      <p class="banner-text">Badges:</p>
+      <div class="banner-text" id="userBadges"></div>
+    </div>
+    <div class="user-info-section">
+      <p class="banner-text">Roles:</p>
+      <div class="banner-text"  id="userRoles"></div>
+    </div>
+     <li class="banner-text"><a href="Search Up User.html">View Stats of Users</a></li>
+
+  <a href="Login.html"><button class="Logout" id="logoutBtn">Logout</button><a>
+</div>
+<div>                  </div>  
+
+        <input type="text" id="usernameInput" placeholder="Enter Username">
+        <button id="showUserInfoBtn">Show User Info</button>
+    </div>
+</div>
+<style>
+        input{
+                color: Blue;
+                                font-size: 20px;
+                background-color: black;
+        }
+        
+        button:hover{
+                border-radius: 20px;
+                  border-color: white;
+                font-size: 20px;
+                color: white;
+                background-color: Blue;
+                width: 125px;
+             height: 50px; 
+                 
+        }
+        button{
+                border-color: white;
+                font-size: 20px;
+                color: white;
+                background-color: black;
+                width: 125px;
+             height: 50px;   
+        }
+        p{
+                color: white;
+                font-size: 15px;
+        }
+        body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #800080 20%, #00008B 80%);
+    overflow: hidden;
+}
+        </style>
+<script>
+    // Sample user data
+   const users = [
+          
+    {
+    "username": "mxnn",
+    "password": "Test",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 1000,
+    "roles": ["Common"],
+    "badges": ["Verified.webp"],
+    "banned": false
+    },             {
+    "username": "Sheena",
+    "password": "Test",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 1000,
+    "roles": ["Common"],
+    "badges": ["Verified.webp"],
+    "banned": false
+  },
+         {
+    "username": "Its_ian",
+    "password": "w23456789ian",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": ["OG.webp"],
+    "banned": false
+  },
+        {
+    "username": "KingMatthewTha3rd",
+    "password": "MatthewJr91",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+    "roles": ["A Wenie"],
+    "badges": ["Owner.webp","Verified.webp","OG.webp","Plus.webp"],
+    "banned": false
+  },
+          {
+    "username": "GauntCellar2235",
+    "password": "Gaunt971",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [],
+    "banned": false
+  },
+          {
+    "username": "MJC",
+    "password": "MJJC791",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [],
+    "banned": false
+  },
+         {
+    "username": "Fleainn",
+    "password": "Fleas0978",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": ["Verified.webp","ES.gif"],
+    "banned": false
+  },
+        {
+    "username": "JakeGamingYT",
+    "password": "Cheerios22",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": ["Verified.webp","ES.gif"],
+    "banned": false
+  },
+          {
+    "username": "Bacon",
+    "password": "Porky971",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [""],
+    "banned": false
+  },
+           {
+    "username": "blacketgod209",
+    "password": "Blooketgodest",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [""],
+    "banned": false
+  },
+        
+           {
+    "username": "LavaVerse",
+    "password": "Lavva879",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [""],
+    "banned": false
+  },
+        
+         {
+    "username": "Zari",
+    "password": "ZZari971",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [""],
+    "banned": false
+  },
+        {
+    "username": "1ight",
+    "password": "Swin34",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": ["Verified.webp"],
+    "banned": false
+  },
+         {
+    "username": "Blookpack",
+    "password": "Ir02212013",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [],
+    "banned": false
+  },
+         {
+    "username": "Ep",
+    "password": "Emi7981",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [],
+    "banned": false
+  },
+         {
+    "username": "Emi",
+    "password": "Emi7981",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [],
+    "banned": false
+  },
+         {
+    "username": "Jayfeather",
+    "password": "Tester123",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": ["Verified.webp"],
+    "banned": false
+  },
+         {
+    "username": "Riot",
+    "password": "Riotlydumb",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": ["Verified.webp"],
+    "banned": false
+  },
+        
+         {
+    "username": "BenStewart VIII",
+    "password": "ThaStewarts",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Owner"],
+    "badges": ["Verified.webp", "OG.webp", " Staff.webp", " bot.GIF", " Owner.webp", " Tester.webp", " Artist.webp", " Costuber.webp", " Server Booster.png"],
+    "banned": false
+  },
+  {
+    "username": "Prq",
+    "password": "Prqy66",
+    "profilePic": "Tachi.gif",
+    "tokens": 88888398983,
+    "roles": ["Owner"],
+    "badges": ["Verified.webp", "OG.webp", " Staff.webp", "Owner.png", "Server Booster.png", "bot.GIF", "Tester.png", "Artist.webp","Dev Badge.png","ES.gif","Costuber.webp","Plus.webp"],
+    "banned": false
+  },
+  {
+    "username": "Av",
+    "password": "Avry971",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 18273,
+    "roles": ["S2 Elite"],
+    "badges": ["ES.gif","Verified.webp","OG.webp","Legendary Tester.PNG"],
+    "banned": false
+  },
+  {
+    "username": "ABeck10",
+    "password": "Becky971",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [""],
+    "banned": false
+  },
+  {
+    "username": "BenStewart",
+    "password": "ThaStewarts",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Owner"],
+    "badges": ["Verified.webp", "OG.webp", " Staff.webp", " bot.GIF", " Owner.png", " Artist.webp", " Costuber.webp", " Server Booster.png"],
+    "banned": false
+  },
+  {
+    "username": "Buenar",
+    "password": "Buenar360",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 5000,
+    "roles": ["Admin"],
+    "badges": ["Verified.webp", "OG.webp", " Staff.webp","Dev Badge.png","ES.gif,"],
+    "banned": false
+  },
+  {
+    "username": "42kGolden",
+    "password": "Golden322",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 5000,
+    "roles": ["Common"],
+    "badges": ["Verified.webp", "OG.webp"],
+    "banned": false
+  },
+  {
+    "username": "Warrior",
+    "password": "Warrior2211",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 250,
+    "roles": ["Artist"],
+    "badges": ["Verified.webp", " Artist.webp", " OG.webp"],
+    "banned": false
+  },
+  {
+    "username": "Allonme",
+    "password": "Allonme37",
+    "profilePic": "Golden Crab.webp",
+    "tokens": 0,
+    "roles": ["common"],
+    "badges": ["Verified.webp"],
+    "banned": false
+  },
+  {
+    "username": "KV",
+    "password": "KV2112",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Helper"],
+    "badges": ["Verified.webp", "OG.webp", "Costuber.webp","Tester.webp","Staff.webp"],
+    "banned": false
+  },
+  {
+    "username": "GamerYT",
+    "password": "Gamer9571",
+    "profilePic": "GamerYTRW.webp",
+    "tokens": 0,
+    "roles": ["owner"],
+    "badges": [" Owner.png", "Staff.webp", "Tester.webp", "Verified.webp", "Same User.png", "Artist.webp", "OG.webp", "Server Booster.png","ES.gif"],
+    "banned": false
+  },
+  {
+    "username": "Thunder22",
+    "password": "Goat22",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 9999999999999999999,
+    "roles": ["Owner"],
+    "badges": ["Verified.webp","Tester.webp","Plus.webp","Owner.png"],
+    "banned": false
+  },
+  {
+    "username": "Fries",
+    "password": "Frie",
+    "profilePic": "Fries.png",
+    "tokens": 15,
+    "roles": ["Helper"],
+    "badges": ["Staff Badge.png", "Artist Badge.png", "OG Badge.webp", "Tester Badge.png", "Verified.png","ES.gif"],
+    "banned": false
+  },
+  {
+    "username": "Mystical",
+    "password": "Mystic981",
+    "profilePic": "Blooket_Warrior.webp",
+    "tokens": 0,
+    "roles": ["Common"],
+    "badges": [],
+    "banned": false
+  },
+  {
+    "username": "Hawkmrg",
+    "password": "TheHawk2",
+    "profilePic": "profile2.jpg",
+    "tokens": 15,
+    "roles": ["Owner"],
+    "badges": [" Owner.web"],
+    "banned": false
+  },
+  {
+    "username": "SOUNDGOD",
+    "password": "TheGods22",
+    "profilePic": "SOUNDGOD.gif",
+    "tokens": 15,
+    "roles": ["Admin"],
+    "badges": ["Staff Badge.png", "Verified.png"],
+    "banned": true
+  },
+  {
+    "username": "A9",
+    "password": "Password",
+    "profilePic": "Golden Crab.webp",
+    "tokens": 15,
+    "roles": ["admin"],
+    "badges": ["Verified.webp", "Staff.webp", "OG.webp", "Tester.webp","ES.gif"],
+    "banned": false
+  },
+  {
+    "username": "ChezyBred",
+    "password": "PrqIsStinky",
+    "profilePic": "ChezyBRED.webp",
+    "tokens": 15,
+    "roles": ["Owner"],
+    "badges": ["Staff Badge.png", "Owner.png", "Tester Badge.png", "Verified.png", "Server Booster.png","ES.gif"]
+  }
+];
+    // Function to display user info
+    function displayUserInfo(user) {
+        document.getElementById("userInfo").style.display = "block";
+        document.getElementById("loggedInUser").textContent = user.username;
+        document.getElementById("profileImg").src = user.profilePic;
+        document.getElementById("userTokens").textContent = user.tokens;
+
+        // Display roles
+        const rolesContainer = document.getElementById("userRoles");
+        rolesContainer.innerHTML = "";
+        user.roles.forEach(role => {
+            const roleElement = document.createElement("span");
+            roleElement.textContent = role;
+            rolesContainer.appendChild(roleElement);
+        });
+
+        // Display badges
+        const badgesContainer = document.getElementById("userBadges");
+        badgesContainer.innerHTML = "";
+        user.badges.forEach(badge => {
+            const badgeElement = document.createElement("img");
+            badgeElement.src = badge;
+            badgeElement.style.width = "35px";
+            badgesContainer.appendChild(badgeElement);
+        });
+
+        document.getElementById("userStats").style.display = "block";
+    }
+
+    // Event listener for button click to show user info
+    document.getElementById("showUserInfoBtn").addEventListener("click", function () {
+        const username = document.getElementById("usernameInput").value;
+        const user = users.find(u => u.username === username);
+        if (user) {
+            displayUserInfo(user);
+        } else {
+            alert("User not found.");
+        }
+    });
+
+    // Logout function
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+        document.getElementById("userInfo").style.display = "none";
+        document.getElementById("usernameInput").value = ""; // Clear the input field
+    });
+</script>
+
+</body>
+</html>

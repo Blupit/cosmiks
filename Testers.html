@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat System</title>
+</head>
+<body>
+<div id="chat-container">
+  <div id="chat-messages"></div>
+  <input type="text" id="message-input" placeholder="Type your message...">
+  <button id="send-button">Send</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+  import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC6E3YP2GZXsm3IWjLWFzzCDpeea2BMalI",
+    authDomain: "cosmik-3f54f.firebaseapp.com",
+    projectId: "cosmik-3f54f",
+    storageBucket: "cosmik-3f54f.appspot.com",
+    messagingSenderId: "244082314102",
+    appId: "1:244082314102:web:d6beb2db0a2239fde40857",
+    measurementId: "G-W3835W7WGD"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const database = getDatabase(app);
+  const messagesRef = ref(database, 'messages');
+
+  const chatMessages = document.getElementById('chat-messages');
+  const messageInput = document.getElementById('message-input');
+  const sendButton = document.getElementById('send-button');
+
+  sendButton.addEventListener('click', () => {
+    const message = messageInput.value.trim();
+    if (message !== '') {
+      push(messagesRef, {
+        message: message,
+        timestamp: new Date().toISOString()
+      });
+      messageInput.value = '';
+    }
+  });
+
+  function displayMessage(message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.textContent = `${message.message} - ${message.timestamp}`;
+    chatMessages.appendChild(messageDiv);
+  }
+
+  onChildAdded(messagesRef, (snapshot) => {
+    const message = snapshot.val();
+    displayMessage(message);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    .typewriter {
+        overflow: hidden; /* Ensures the text is not revealed until the animation */
+        border-right: .15em solid orange; /* The typewriter cursor */
+        white-space: nowrap; /* Keeps the content on a single line */
+        margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+        letter-spacing: .15em; /* Adjust as needed */
+        animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+    }
+
+    /* The typing effect */
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+
+    /* The typewriter cursor effect */
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: orange }
+    }
+
+    /* Style for the div with buttons */
+    .buttons-div {
+        display: none;
+        margin-top: 20px;
+    }
+    .buttons-div button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+</style>
+</head>
+<body>
+
+<div id="typewriter" class="typewriter"></div>
+<div id="buttons" class="buttons-div">
+    <button>Change Username</button>
+    <button>Add Username color</button>
+    <button>Ban Member by ID</button>
+    <button>Mute Member by ID</button>
+    <button>Add Blook</button>
+        <button>Change Username</button>
+    <button>Add Username color</button>
+    <button>Ban Member by ID</button>
+    <button>Mute Member by ID</button>
+    <button>Add Blook</button>
+</div>
+
+<script>
+document.addEventListener('keydown', function(event) {
+    if (event.altKey && event.shiftKey && event.ctrlKey && event.key === 'ArrowLeft') {
+        startTyping();
+    }
+});
+
+function startTyping() {
+    var text = "welcome Staff member to the panel. Panel By Prq. Current Version downloaded: 0.1";
+    var typewriterDiv = document.getElementById('typewriter');
+    typewriterDiv.textContent = ''; // Clear previous content
+
+    var index = 0;
+    var typingInterval = setInterval(function() {
+        if (index < text.length) {
+            typewriterDiv.textContent += text.charAt(index);
+            index++;
+        } else {
+            clearInterval(typingInterval);
+            showButtons();
+        }
+    }, 100);
+}
+
+function showButtons() {
+    var buttonsDiv = document.getElementById('buttons');
+    buttonsDiv.style.display = 'block';
+}
+</script>
+
+</body>
+</html>

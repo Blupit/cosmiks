@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Jumping Game with Arrows</title>
+<style>
+    #player {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        bottom: 0;
+        left: 0;
+    }
+    .arrow {
+        position: absolute;
+        width: 20px;
+        height: 5px;
+        background-color: blue;
+        bottom: 0;
+    }
+    #finish {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-color: white;
+        background-image: radial-gradient(black 10%, white 10%);
+        bottom: 0;
+        right: 0;
+    }
+</style>
+</head>
+<body>
+
+<div id="player"></div>
+<div id="finish"></div>
+
+<script>
+    const player = document.getElementById('player');
+    const finish = document.getElementById('finish');
+    let jumping = false;
+    let bottom = 0;
+    let velocity = 0;
+    const gravity = 0.5;
+    const jumpStrength = 10;
+    const moveSpeed = 5;
+    const arrowSpeed = 3;
+    const arrowFrequency = 1000; // Time interval between each arrow (in milliseconds)
+    let lastArrowTime = 0;
+    let shieldActive = false;
+    let shieldCooldown = 0;
+
+    function jump() {
+        if (!jumping) {
+            jumping = true;
+            velocity = jumpStrength;
+        }
+    }
+
+    function moveLeft() {
+        const left = parseInt(player.style.left) || 0;
+        player.style.left = left - moveSpeed + 'px';
+    }
+
+    function moveRight() {
+        const left = parseInt(player.style.left) || 0;
+        player.style.left = left + moveSpeed + 'px';
+    }
+
+    function applyGravity() {
+        bottom += velocity;
+        velocity -= gravity;
+        if (bottom <= 0) {
+            bottom = 0;
+            velocity = 0;
+            jumping = false;
+        }
+        player.style.bottom = bottom + 'px';
+    }
+
+    function createArrow() {
+        const arrow = document.createElement('div');
+        arrow.className = 'arrow';
+        arrow.style.left = Math.random() * (window.innerWidth - 20) + 'px';
+        document.body.appendChild(arrow);
+        setTimeout(() => {
+            arrow.remove();
+        }, 3000); // Remove arrow after 3 seconds
+    }
+
+    function moveArrows() {
+        const currentTime = Date.now();
+        if (currentTime - lastArrowTime > arrowFrequency) {
+            createArrow();
+            lastArrowTime = currentTime;
+        }
+    }
+
+    function checkCollisions() {
+        if (!shieldActive) {
+            const playerRect = player.getBoundingClientRect();
+            const arrows = document.querySelectorAll('.arrow');
+            arrows.forEach(arrow => {
+                const arrowRect = arrow.getBoundingClientRect();
+                if (
+                    playerRect.left < arrowRect.right &&
+                    playerRect.right > arrowRect.left &&
+                    playerRect.bottom > arrowRect.top &&
+                    playerRect.top < arrowRect.bottom
+                ) {
+                    gameOver();
+                }
+            });
+        }
+    }
+
+    function gameOver() {
+        alert('Game Over!');
+        location.reload(); // Reload the page to restart the game
+    }
+
+    function activateShield() {
+        if (!shieldActive && shieldCooldown <= 0) {
+            shieldActive = true;
+            setTimeout(() => {
+                shieldActive = false;
+                shieldCooldown = 10000; // 10 seconds cooldown
+            }, 5000); // Shield lasts for 5 seconds
+        }
+    }
+
+    function updateShieldCooldown() {
+        if (shieldCooldown > 0) {
+            shieldCooldown -= 1000; // Decrease cooldown by 1 second every game loop iteration
+        }
+    }
+
+    function checkFinishLine() {
+        const playerRect = player.getBoundingClientRect();
+        const finishRect = finish.getBoundingClientRect();
+        if (
+            playerRect.left < finishRect.right &&
+            playerRect.right > finishRect.left &&
+            playerRect.bottom > finishRect.top &&
+            playerRect.top < finishRect.bottom
+        ) {
+            showFinishMenu();
+        }
+    }
+
+    function showFinishMenu() {
+        const menu = document.createElement('div');
+        menu.innerHTML = `
+            <h2>Congratulations!</h2>
+            <p>You've reached the finish line.</p>
+            <button onclick="restartGame()">Restart</button>
+            <button onclick="goToMainMenu()">Main Menu</button>
+        `;
+        document.body.appendChild(menu);
+    }
+
+    function restartGame() {
+        location.reload(); // Reload the page to restart the game
+    }
+
+    function goToMainMenu() {
+        // Add code to go to the main menu
+        alert('Returning to main menu...');
+    }
+
+    document.addEventListener('keydown', event => {
+        if (event.key === ' ') {
+            jump();
+        } else if (event.key === 'a' || event.key === 'A') {
+            moveLeft();
+        } else if (event.key === 'd' || event.key === 'D') {
+            moveRight();
+        } else if (event.key === 'c' || event.key === 'C') {
+            activateShield();
+        }
+    });
+
+    function gameLoop() {
+        applyGravity();
+        moveArrows();
+        checkCollisions();
+        updateShieldCooldown();
+        checkFinishLine();
+        requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+</script>
+
+</body>
+</html>

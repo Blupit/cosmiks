@@ -1,0 +1,933 @@
+User
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartoonish Market</title>
+<style>
+        .sell-input-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .sell-input-container input[type="number"] {
+    width: 100px;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #6C5B7B, #355C7D);
+    color: #fff;
+    text-align: center;
+    margin-right: 10px;
+  }
+
+  .sell-input-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #6C5B7B, #355C7D);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .sell-input-container button:hover {
+    background: linear-gradient(to right, #4C5495, #5E548E);
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #6C5B7B, #355C7D);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* To prevent the animation from causing scrolling */
+  }
+
+  /* Animation for the background waves */
+  @keyframes waveAnimation {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+
+  /* Apply the animation to the body */
+  body {
+    animation: waveAnimation 10s linear infinite alternate;
+  }
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 800px;
+  }
+  .item {
+    width: 200px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  .item:hover {
+    transform: translateY(-5px);
+  }
+  .item img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .item-content {
+    padding: 20px;
+  }
+  .item-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  .item-price {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  .item-link {
+    display: block;
+    text-decoration: none;
+    background-color: #5E548E;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  .item-link:hover {
+    background-color: #4C5495;
+  }
+</style>
+</head>
+<body>
+
+  <div class="item">
+    <img src="OG Pack.png" alt="Product 2">
+    <div class="item-content">
+      <div class="item-title">OG Pack</div>
+      <div class="item-price">25 Tokens each</div>
+      <Button onclick="buyPack()"  class="item-link">Open</Button>
+    </div>
+  </div>
+
+  <!-- Add more items as needed -->
+</div>
+
+
+<script>
+          document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('Right-clicking is disabled on this website.');
+    });
+
+    // Prevent Ctrl + U
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            alert('Viewing page source is disabled on this website.');
+        }
+    });
+    window.addEventListener('devtoolschange', function(event) {
+        if (event.detail.isOpen) {
+            // Redirect to another page
+            window.location.replace("https://example.com/redirected-page");
+        }
+    });
+
+    // Function to detect if dev tools are open
+    function checkDevTools() {
+        let isOpen = false;
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        isOpen = widthThreshold || heightThreshold;
+
+        // Dispatch event indicating dev tools state
+        const event = new CustomEvent('devtoolschange', { detail: { isOpen } });
+        window.dispatchEvent(event);
+    }
+
+    // Check for dev tools periodically
+    setInterval(checkDevTools, 1000);
+window.addEventListener('load', function() {
+  // Remove loading overlay and show content
+  document.querySelector('.loading-overlay').style.display = 'none';
+  document.body.style.display = 'block';
+});
+</script>
+<style>
+        p{
+                font-size: 40px;
+        }
+          .rainbow-text {
+    background-image: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: rainbow 2s linear infinite;
+  }
+
+  @keyframes rainbow {
+    0% {background-position: 0% 50%}
+    50% {background-position: 100% 50%}
+    100% {background-position: 0% 50%}
+  }
+  /* Your existing CSS styles here */
+
+  /* New styles for separate containers */
+  .user-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Adjust margin as needed */
+  }
+
+  .user-info-section {
+    margin-bottom: 20px; /* Adjust margin as needed */
+  }
+</style>
+
+</head>
+<body>
+      
+<div class="stats-board">
+
+<form style=" width:0px;" id="loginForm">
+  <!-- Your existing login form here -->
+</form>
+
+<div style=" width: 0px; height: 0px;" id="userInfo" style="display: none;">
+         <span style=" font-size: 0px;" id="loggedInUser"></span>
+  <img style="width: 0px;" src="" alt="Profile Picture" id="profileImg">
+  <div class="user-info-container">
+    <!-- Separate containers for tokens, badges, and roles -->
+    <div class="user-info-section">
+
+ <h1>Tokens: <span id="userTokens"></span></h1>
+    </div>
+  </div>
+</div>
+        <div id="sellItemSection">
+  <label for="sellQuantity">Quantity to Sell:</label>
+  <input type="number" id="sellQuantity" min="1" value="1">
+  <button class="item-link" onclick="sellItem()">Sell Item</button>
+</div>
+
+           
+<h1 style=" margin-left: 200px;" id="obtainedItemsList"></h1>
+
+  <!-- Card container to display items obtained from packs -->
+
+
+<!-- Rest of your HTML code -->
+<div class="card-container" id="cardContainer"></div>
+
+<!-- List to display obtained items with their count -->
+  
+
+<script>
+// Sample user data
+const users = [
+  { username: "PrqYT", password: "Reset2211", profilePic: "Acient Panda.png", tokens: 10, roles: ["Owner"], badges: ["Staff Badge.png","Owner Badge.png","Tester Badge.png" ] },
+  { username: "ShadowBanana1", password: "Marcus2211", profilePic: "profile2.jpg", tokens: 15, roles: ["Staff"], badges: ["Staff Badge.png"] },
+  
+];
+
+// Login function
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  
+  const user = users.find(u => u.username === username && u.password === password);
+  if (user) {
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    displayUserInfo(user);
+  } else {
+    alert("Invalid username or password.");
+  }
+});
+
+// Display user info
+function displayUserInfo(user) {
+  document.getElementById("userInfo").style.display = "block";
+  document.getElementById("loggedInUser").textContent = user.username;
+  document.getElementById("profileImg").src = user.profilePic;
+  document.getElementById("userTokens").textContent = user.tokens;
+
+  // Display roles
+  const rolesContainer = document.getElementById("userRoles");
+  rolesContainer.innerHTML = "";
+  user.roles.forEach(role => {
+    const roleElement = document.createElement("span");
+    roleElement.textContent = role;
+    rolesContainer.appendChild(roleElement);
+  });
+
+  // Display badges
+  const badgesContainer = document.getElementById("userBadges");
+  badgesContainer.innerHTML = "";
+  user.badges.forEach(badge => {
+    const badgeElement = document.createElement("img");
+    badgeElement.src = badge;
+    badgeElement.style.width = "25px";
+    badgesContainer.appendChild(badgeElement);
+  });
+
+  document.getElementById("userStats").style.display = "block";
+}
+
+// Check if user is already logged in
+const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+if (loggedInUser) {
+  displayUserInfo(loggedInUser);
+}
+
+// Logout function
+document.getElementById("logoutBtn").addEventListener("click", function() {
+  localStorage.removeItem("loggedInUser");
+  location.reload();
+});
+
+// Token manipulation
+document.getElementById("addTokenBtn").addEventListener("click", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (user) {
+    user.tokens += 500;
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    document.getElementById("userTokens").textContent = user.tokens;
+  }
+});
+
+document.getElementById("subtractTokenBtn").addEventListener("click", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (user && user.tokens > 0) {
+    user.tokens -= 100;
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    document.getElementById("userTokens").textContent = user.tokens;
+  }
+});
+        // Event listener for keydown event
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'p' || event.key === 'P') {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (loggedInUser && loggedInUser.badges.includes("Staff Badge.png")) {
+      showPopupDiv(); // Call function to show the div with 5 buttons
+    }
+  }
+});
+
+// Function to show the div with 5 buttons
+function showPopupDiv() {
+  const popupDiv = document.getElementById('popupDiv');
+  popupDiv.style.display = 'block';
+}
+
+// Function to handle button clicks inside the popup div
+function handleButtonClick(buttonNumber) {
+  // Add your logic here for handling button clicks
+  console.log('Button ' + buttonNumber + ' clicked.');
+}
+      // Function to apply rainbow animation to the username
+function applyRainbowAnimation() {
+  const loggedInUserSpan = document.getElementById("loggedInUser");
+  loggedInUserSpan.classList.add("rainbow-animation");
+}
+
+// Event listener for the rainbow button
+document.getElementById("rainbowBtn").addEventListener("click", function() {
+  applyRainbowAnimation();
+});
+
+         // Add rainbow animation class if the username matches
+  // Check if developer tools are open
+const devtools = {
+  isOpen: false,
+  check: () => {
+    const startTime = performance.now();
+    debugger;
+    const endTime = performance.now();
+    if (endTime - startTime > 100) {
+      devtools.isOpen = true;
+    }
+  }
+};
+
+// Function to ban user and redirect
+function banAndRedirect() {
+  alert("Developer tools detected. You are banned and being redirected.");
+  window.location.href = "login.html"; // Redirect to login.html
+}
+
+// Check for developer tools
+devtools.check();
+if (devtools.isOpen) {
+  banAndRedirect();
+}
+ 
+</script>
+
+</body>
+</html>
+
+<title>Home</title>
+        <style>
+               \
+          /* Rainbow animation */
+@keyframes rainbow {
+  0% {
+    color: red;
+  }
+  16.666% {
+    color: orange;
+  }
+  33.333% {
+    color: yellow;
+  }
+  50% {
+    color: green;
+  }
+  66.666% {
+    color: blue;
+  }
+  83.333% {
+    color: indigo;
+  }
+  100% {
+    color: violet;
+  }
+}
+
+/* Apply the rainbow animation to the username */
+.rainbow-animation {
+  animation: rainbow 2s infinite;
+}
+
+  .badge-btn {
+    display: none;
+  }
+                /* CSS for styling input and button */
+#sellItemSection {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#sellItemSection label {
+  color: white;
+}
+
+#sellItemSection input[type="number"] {
+  background: linear-gradient(to right, purple, blue);
+  border: none;
+  color: white;
+  padding: 5px;
+  margin: 0 5px;
+}
+
+#sellItemSection button {
+  background: linear-gradient(to right, purple, blue);
+  border: none;
+  color: white;
+  padding: 8px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+#sellItemSection button:hover {
+  background: linear-gradient(to left, purple, blue);
+}
+
+</style>
+</head>
+<body>
+
+  
+  <script>
+    // Function to unlock a badge
+    function unlockBadge(badgeNumber) {
+      localStorage.setItem(`badge${badgeNumber}`, 'unlocked');
+      document.getElementById('badgeBtn').style.display = 'inline-block';
+    }
+
+    // Check for unlocked badges in local storage
+    function checkForBadges() {
+      for (let i = 1; i <= 9; i++) {
+        if (localStorage.getItem(`badge${i}`) === 'unlocked') {
+          document.getElementById('badgeBtn').style.display = 'inline-block';
+          break;
+        }
+      }
+    }
+
+    // Event listener for unlocking badges
+    document.getElementById('unlockBtn').addEventListener('click', function() {
+      // Unlocking badge 1 for demonstration purposes
+      unlockBadge(1);
+    });
+
+    // Event listener for displaying badge button if badge is unlocked
+    document.addEventListener('DOMContentLoaded', function() {
+      checkForBadges();
+    });
+
+    // Event listener for showing the badge
+    document.getElementById('badgeBtn').addEventListener('click', function() {
+      document.querySelector('.badge-img').style.display = 'inline-block';
+    });
+          function sellItem() {
+  const selectedItemName = document.getElementById("selectedItemName").textContent;
+  const sellQuantity = parseInt(document.getElementById("sellQuantity").value);
+  const obtainedItems = JSON.parse(localStorage.getItem('obtainedItems')) || {};
+
+  if (obtainedItems[selectedItemName] >= sellQuantity) {
+    // Retrieve user from localStorage
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    // Determine token value based on rarity
+    let tokenValue = 0;
+    switch (selectedItemName.split('[')[1].split(']')[0]) {
+      case "Common":
+        tokenValue = 5;
+        break;
+      case "Rare":
+        tokenValue = 30;
+        break;
+      case "Epic":
+        tokenValue = 100;
+        break;
+      case "Legendary":
+        tokenValue = 450;
+        break;
+      case "Chroma":
+        tokenValue = 1000;
+        break;
+      case "Mystical":
+        tokenValue = 5000;
+        break;
+      case "Cosmik":
+        tokenValue = 50000;
+        break;
+      case "Unique":
+        tokenValue = 15000;
+        break;
+      default:
+        tokenValue = 0;
+    }
+
+    // Calculate total token value
+    const totalTokenValue = tokenValue * sellQuantity;
+
+    // Update user's tokens
+    user.tokens += totalTokenValue;
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+    // Update obtainedItems
+    obtainedItems[selectedItemName] -= sellQuantity;
+    if (obtainedItems[selectedItemName] <= 0) {
+      delete obtainedItems[selectedItemName];
+    }
+    localStorage.setItem('obtainedItems', JSON.stringify(obtainedItems));
+
+    // Update UI to reflect changes
+    renderObtainedItems();
+    alert(`Successfully sold ${sellQuantity} ${selectedItemName} for ${totalTokenValue} tokens.`);
+  } else {
+    alert("Not enough quantity to sell.");
+  }
+}
+  </script>
+</body>
+</html>
+<style>
+  /* Resetting default margin and padding */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+        p{
+                 margin-left: 25px;
+    font-size: 10px;
+    color: white;
+        }
+  h1 {
+          margin-top: -300px;
+    margin-left: 25px;
+    font-size: 25px;
+    color: white;
+  }
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #800080 20%, #00008B 80%);
+    overflow: hidden;
+}
+
+</style>
+</head>
+<style>
+
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    text-align: center;
+  }
+
+  .card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+         #pulledItems {
+    margin-top: 20px;
+  }
+
+  #pulledItems img {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+  }
+</style>
+        
+<body>
+<!-- Your existing HTML content -->
+
+<!-- Your existing HTML content -->
+
+<script>
+// Define rarities and their chances
+const rarities = [
+  { name: "Common", chance: 50 },
+  { name: "Rare", chance: 10 },
+  { name: "Epic", chance: 5 },
+  { name: "Legendary", chance: 1},
+  { name: "Chroma", chance: 0.1 },
+  { name: "Mystical", chance: 0.01 },
+         { name: "Unique", chance: 0.03 },
+  { name: "Cosmik", chance: 0.001 }
+];
+
+// Define items for each rarity with their respective images
+const itemsByRarity = {
+  "Common": [
+    { name: "Fleainn[Uncommon]", image: "Fleainn.png" },
+    { name: "Fries[Uncommon]", image: "Fries.png" },
+    { name: "Hawkmrg[Uncommon]", image: "Hawkmrg.webp" }
+  ],
+  "Rare": [
+    { name: "GamerYT[Rare]", image: "GamerYTRW.webp" },
+    { name: "KV[Rare]", image: "KV.png" }
+  ],
+  "Epic": [
+    { name: "Warrior[Epic]", image: "Blooket_warrior.webp" },
+    { name: "Unknown[Epic]", image: "Unknown.webp" },
+  ],
+  "Legendary[Legendary]": [{ name: "BaconGen", image: "BaconGen.png" }],
+  "Chroma": [{ name: "Chezybred[Chroma]", image: "ChezyBRED.webp" }],
+  "Mystical": [{ name: "SoundGod[Mystical]", image: "SOUNDGOD.gif" }],
+          "Unique": [{ name: "Witch[Unique]", image: "Witch.png" }],
+
+  "Cosmik": [{ name: "Cosmik Shards", image: "Cosmik Shards.gif" }]
+};
+
+// Function to randomly select an item based on its rarity
+function selectItemByRarity(rarity) {
+  const items = itemsByRarity[rarity];
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+// Function to buy a pack
+function buyPack() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (user && user.tokens >= 25) {
+    // Deduct tokens
+    user.tokens -= 25;
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+    // Get items from the pack
+    const itemsFromPack = [];
+    for (const rarity of rarities) {
+      if (Math.random() < rarity.chance / 100) {
+        const selectedItem = selectItemByRarity(rarity.name);
+        itemsFromPack.push(selectedItem);
+      }
+    }
+
+    // Update or create item count in localStorage
+    const obtainedItems = JSON.parse(localStorage.getItem('obtainedItems')) || {};
+    itemsFromPack.forEach(item => {
+      if (obtainedItems[item.name]) {
+        obtainedItems[item.name]++;
+      } else {
+        obtainedItems[item.name] = 1;
+      }
+    });
+    localStorage.setItem('obtainedItems', JSON.stringify(obtainedItems));
+
+    // Display items obtained from the pack with their count
+    const cardContainer = document.getElementById("cardContainer");
+    cardContainer.innerHTML = "";
+    const obtainedItemsList = document.getElementById("obtainedItemsList");
+    obtainedItemsList.innerHTML = "";
+    itemsFromPack.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<img src="${item.image}" alt="${item.name}"><p>${item.name} (Count: ${obtainedItems[item.name]})</p>`;
+      cardContainer.appendChild(card);
+      // Add the obtained item to the list at the bottom of the screen
+      const listItem = document.createElement("li");
+      listItem.textContent = `${item.name} (Count: ${obtainedItems[item.name]})`;
+      obtainedItemsList.appendChild(listItem);
+    });
+  } else {
+    alert("Insufficient tokens to buy a pack.");
+  }
+}
+        // Function to render obtained items from localStorage
+// Function to sell obtained items
+function sellItem(itemName) {
+  const obtainedItems = JSON.parse(localStorage.getItem('obtainedItems')) || {};
+  const item = obtainedItems[itemName];
+  let tokenValue = 0;
+
+  // Determine token value based on rarity
+  switch (itemName.split('[')[1].split(']')[0]) {
+    case "Common":
+      tokenValue = 5;
+      break;
+    case "Rare":
+      tokenValue = 30;
+      break;
+    case "Epic":
+      tokenValue = 100;
+      break;
+    case "Legendary":
+      tokenValue = 450;
+      break;
+    case "Chroma":
+      tokenValue = 1000;
+      break;
+    case "Mystical":
+      tokenValue = 5000;
+      break;
+    case "Cosmik":
+      tokenValue = 50000;
+      break;
+    case "Unique":
+      tokenValue = 15000;
+      break;                
+    default:
+      tokenValue = 0;
+  }
+
+  // Update tokens in localStorage and display
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  user.tokens += tokenValue * item;
+  localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+  // Remove sold item from obtained items list
+  delete obtainedItems[itemName];
+  localStorage.setItem('obtainedItems', JSON.stringify(obtainedItems));
+
+  // Update UI to reflect the changes
+  renderObtainedItems();
+}
+
+// Render obtained items function
+function renderObtainedItems() {
+  const obtainedItemsList = document.getElementById("obtainedItemsList");
+  obtainedItemsList.innerHTML = "";
+
+  // Retrieve obtained items from localStorage
+  const obtainedItems = JSON.parse(localStorage.getItem('obtainedItems')) || {};
+
+  // Iterate through obtained items and render them
+  for (const itemName in obtainedItems) {
+    const item = obtainedItems[itemName];
+
+    // Create list item for each obtained item
+    const listItem = document.createElement("li");
+    listItem.textContent = `${itemName} (Count: ${item})`;
+
+    // Create sell button for each item
+    const sellButton = document.createElement("button");
+    sellButton.textContent = "Sell";
+    sellButton.addEventListener("click", function() {
+      // Ask user how many items to sell
+      const sellCount = prompt(`How many ${itemName} do you want to sell?`, 0);
+      if (sellCount !== null) { // If user doesn't cancel prompt
+        sellItem(itemName, sellCount);
+      }
+    });
+
+    // Append sell button to list item
+    listItem.appendChild(sellButton);
+    obtainedItemsList.appendChild(listItem);
+  }
+}
+
+// Function to handle selling items
+function sellItem(itemName, sellCount) {
+  const obtainedItems = JSON.parse(localStorage.getItem('obtainedItems')) || {};
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (obtainedItems[itemName] >= sellCount) {
+    // Calculate token value for the sold items (you may adjust this logic as needed)
+    let tokenValue = 0;
+    switch (itemName.split('[')[1].split(']')[0]) {
+      case "Common":
+        tokenValue = 5;
+        break;
+      case "Rare":
+        tokenValue = 30;
+        break;
+      // Add cases for other rarities if needed
+    }
+
+    // Update tokens and obtained items count
+    user.tokens += tokenValue * sellCount;
+    obtainedItems[itemName] -= sellCount;
+
+    // Remove item from obtained items if count becomes zero
+    if (obtainedItems[itemName] <= 0) {
+      delete obtainedItems[itemName];
+    }
+
+    // Update localStorage
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    localStorage.setItem('obtainedItems', JSON.stringify(obtainedItems));
+
+    // Re-render obtained items list
+    renderObtainedItems();
+  } else {
+    alert("You don't have enough of this item to sell.");
+  }
+}
+
+// Call renderObtainedItems initially to display obtained items from localStorage
+renderObtainedItems();
+
+// Call renderObtainedItems initially to display obtained items from localStorage
+renderObtainedItems();
+        
+// Call renderObtainedItems initially to display obtained items from localStorage
+        // Function to handle the purchase of an item with Cosmik Shards
+function buySpecialPack() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (user && user.tokens >= 50000) { // Check if user has enough Cosmik Shards
+    // Deduct Cosmik Shards
+    user.tokens -= 50000;
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+    // Define the item purchased with Cosmik Shards
+    const purchasedItem = { name: "Prq[Cosmik]", image: "Prq.webp" }; // Change to your desired item
+
+    // Update or create item count in localStorage
+    const obtainedItems = JSON.parse(localStorage.getItem('obtainedItems')) || {};
+    if (obtainedItems[purchasedItem.name]) {
+      obtainedItems[purchasedItem.name]++;
+    } else {
+      obtainedItems[purchasedItem.name] = 1;
+    }
+    localStorage.setItem('obtainedItems', JSON.stringify(obtainedItems));
+
+    // Update UI to reflect the changes
+    renderObtainedItems();
+  } else {
+    alert("Insufficient Cosmik Shards to purchase the item.");
+  }
+}
+
+
+</script>
+
+<button class="item-link" onclick="buySpecialPack()">Spend Cosmik Shard</button>
+
+<!-- Card container to display items obtained from packs -->
+
+
+</script>
+
+</body>
+</html>
+<style>
+  /* Your existing styles here */
+
+  /* Additional styles for card container */
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    text-align: center;
+  }
+
+  .card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+
+  #obtainedItemsList {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  #obtainedItemsList li {
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<!-- Rest of your HTML content -->
+
+<!-- Card container to display items obtained from packs -->
+
+<body>
+
+
+</body>
+</html>

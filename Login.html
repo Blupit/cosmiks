@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login System</title>
+<style>
+  body {
+          background-size:cover;
+                          background-image: url('https://ac.blooket.com/dashboard/assets/BlookCheckers-BykpA7vd.png');
+
+    background: linear-gradient(to bottom, #800080 20%, #00008B 80%);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Form styles */
+  .login-form {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 255, 0.5);
+    width: 300px;
+    max-width: 80%;
+  }
+
+  .login-form h2 {
+    text-align: center;
+    color: #6a0dad;
+  }
+
+  .login-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #00f;
+  }
+
+  .login-form input[type="text"],
+  .login-form input[type="password"] {
+    width: calc(100% - 22px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #6a0dad;
+    border-radius: 5px;
+    background-color: #000;
+    color: blue;
+  }
+
+  .login-form button[type="submit"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #6a0dad;
+    border-radius: 5px;
+    background-color: #000;
+    color: blue;
+    cursor: pointer;
+  }
+
+  .login-form button[type="submit"]:hover {
+    background-color: #6a0dad;
+    color: #fff;
+  }
+
+  .error {
+    color: #f00;
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="login-form">
+  <h2>Login</h2>
+  <form id="loginForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" required><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" required><br>
+    <button type="submit">Login</button>
+    <div id="errorMessage" class="error"></div>
+  </form>
+</div>
+<script src="login.js"></script>        
+</body>
+</html>

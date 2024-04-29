@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Square Movement and Jump</title>
+<style>
+    #square {
+        width: 50px;
+        height: 50px;
+        background-color: blue;
+        position: absolute;
+    }
+</style>
+</head>
+<body>
+
+<div id="square"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        const square = document.getElementById('square');
+        let x = 0;
+        let y = 0;
+        let jumping = false;
+
+        function moveSquare(dx, dy) {
+            x += dx;
+            y += dy;
+            square.style.left = x + 'px';
+            square.style.top = y + 'px';
+        }
+
+        function jump() {
+            if (!jumping) {
+                jumping = true;
+                let startY = y;
+                let jumpInterval = setInterval(function() {
+                    if (y - startY <= -100) {
+                        clearInterval(jumpInterval);
+                        let fallInterval = setInterval(function() {
+                            if (y >= startY) {
+                                clearInterval(fallInterval);
+                                jumping = false;
+                            } else {
+                                y += 5;
+                                square.style.top = y + 'px';
+                            }
+                        }, 20);
+                    } else {
+                        y -= 5;
+                        square.style.top = y + 'px';
+                    }
+                }, 20);
+            }
+        }
+
+        function shoot() {
+            const bullet = document.createElement('div');
+            bullet.classList.add('bullet');
+            bullet.style.width = '10px';
+            bullet.style.height = '5px';
+            bullet.style.backgroundColor = 'blue';
+            bullet.style.position = 'absolute';
+            bullet.style.left = (x + 50) + 'px'; // Adjust position based on square size
+            bullet.style.top = (y + 20) + 'px'; // Adjust position based on square size
+
+            document.body.appendChild(bullet);
+
+            const bulletInterval = setInterval(function() {
+                const bulletRect = bullet.getBoundingClientRect();
+                if (bulletRect.left > window.innerWidth) {
+                    clearInterval(bulletInterval);
+                    document.body.removeChild(bullet);
+                } else {
+                    bullet.style.left = (bulletRect.left + 5) + 'px';
+                }
+            }, 20);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            switch(event.key) {
+                case 'a':
+                    moveSquare(-5, 0);
+                    break;
+                case 'd':
+                    moveSquare(5, 0);
+                    break;
+                case 'w':
+                    moveSquare(0, -5);
+                    break;
+                case 's':
+                    moveSquare(0, 5);
+                    break;
+                case ' ':
+                    jump();
+                    break;
+                case 'c':
+                    shoot();
+                    break;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

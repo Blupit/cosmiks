@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat System</title>
+<style>
+  /* Chat styles */
+  body {
+    background-image: url("https://ac.blooket.com/dashboard/assets/BlookCheckers-BykpA7vd.png");
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, purple, blue);
+    font-family: Arial, sans-serif;
+  }
+
+  #chat-container {
+    max-width: 1100px;
+    margin: 50px auto;
+    background: linear-gradient(to bottom right, black, blue);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Enable vertical scrolling */
+    height: 80vh; /* Set a fixed height for chat container */
+  }
+
+  .message {
+    color: White;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+  }
+
+  .message .username {
+    font-weight: bold;
+    color: blue;
+  }
+
+  .message .badge {
+    max-width: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+
+  .message .profile-pic {
+    max-width: 70px;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+
+  .message .timestamp {
+    color: #888;
+    font-size: 0.8em;
+    float: right;
+  }
+
+  #message-input {
+    background-color: blue;
+    color: White;
+    width: calc(100% - 80px);
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+  }
+
+  #send-button {
+    width: 60px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* Panel styles */
+  #panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+  }
+
+  #panel h2 {
+    margin-top: 0;
+  }
+
+  #panel-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div id="chat-container">
+  <div id="chat-messages"></div>
+  <input type="text" id="message-input" placeholder="Type your message...">
+  <button id="send-button">Send</button>
+  <div id="message-count">Messages Sent: <span id="count">0</span></div>
+</div>
+
+<!-- Panel for muting and banning users -->
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js";
+  import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC6E3YP2GZXsm3IWjLWFzzCDpeea2BMalI",
+    authDomain: "cosmik-3f54f.firebaseapp.com",
+    databaseURL: "https://cosmik-3f54f-default-rtdb.firebaseio.com",
+    projectId: "cosmik-3f54f",
+    storageBucket: "cosmik-3f54f.appspot.com",
+    messagingSenderId: "244082314102",
+    appId: "1:244082314102:web:4d8b5b6e2ff09d3ce40857",
+    measurementId: "G-94J1RD4JN2"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const database = getDatabase(app);
+  const messagesRef = ref(database, 'messages');
+  let messageCount = 0; // Initialize message count
+
+  const chatMessages = document.getElementById('chat-messages');
+  const messageInput = document.getElementById('message-input');
+  const sendButton = document.getElementById('send-button');
+  const countSpan = document.getElementById('count');
+
+  sendButton.addEventListener('click', () => {
+    const message = messageInput.value.trim();
+    if (message !== '') {
+      push(messagesRef, {
+        message: message,
+        timestamp: new Date().toISOString(),
+        user: JSON.parse(localStorage.getItem("loggedInUser")) // Get logged in user data
+      });
+      messageInput.value = '';
+      updateMessageCount(++messageCount); // Update and display message count
+    }
+  });
+
+  function updateMessageCount(count) {
+    countSpan.textContent = count;
+  }
+
+  function displayMessage(message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+
+    const profilePic = document.createElement('img');
+    profilePic.src = message.user.profilePic;
+    profilePic.classList.add('profile-pic');
+    messageDiv.appendChild(profilePic);
+
+    const username = document.createElement('span');
+    username.textContent = message.user.username;
+    username.classList.add('username');
+    messageDiv.appendChild(username);
+
+    message.user.badges.forEach(badge => {
+      const badgeImg = document.createElement('img');
+      badgeImg.src = badge;
+      badgeImg.classList.add('badge');
+      messageDiv.appendChild(badgeImg);
+    });
+
+    const messageText = document.createElement('span');
+    messageText.textContent = message.message;
+    messageDiv.appendChild(messageText);
+
+    const timestamp = document.createElement('span');
+    timestamp.textContent = message.timestamp;
+    timestamp.classList.add('timestamp');
+    messageDiv.appendChild(timestamp);
+
+    chatMessages.appendChild(messageDiv);
+  }
+
+  onChildAdded(messagesRef, (snapshot) => {
+    const message = snapshot.val();
+    displayMessage(message);
+    updateMessageCount(++messageCount); // Update and display message count
+    scrollToBottom(); // Scroll to bottom after receiving message
+  });
+
+  // Function to scroll the chat container to the bottom
+  function scrollToBottom() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+// Function to generate random messages
+function generateRandomMessage() {
+    const messages = [
+        "Hello, I'm Cosmik!",
+        "Dm Any owner for help with anything!",
+        "Make sure to stay active thats a sure way to get verified",
+        "In order to get staff stay active and have verified!"
+    ];
+
+    // Pick a random message from the array
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    return messages[randomIndex];
+}
+
+// Function to simulate Cosmik sending a message
+function sendCosmikMessage() {
+    const message = generateRandomMessage();
+    push(messagesRef, {
+        message: message,
+        timestamp: new Date().toISOString(),
+        user: {
+            username: "Cosmik",
+            profilePic: "bot.GIF",
+            badges: ["bot.GIF"]
+        }
+    });
+}
+
+// Set interval to send messages periodically
+setInterval(sendCosmikMessage, 500000); // Sends a message every 5 seconds
+
+</script>
+</body>
+</html>

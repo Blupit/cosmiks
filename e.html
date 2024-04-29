@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Image from Firestore</title>
+</head>
+<body>
+    <div id="imageContainer">
+        <!-- Image will be displayed here -->
+    </div>
+
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js"></script>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        // Get a reference to the Firestore database service
+        const db = firebase.firestore();
+
+        // Function to fetch image URL from Firestore
+        function getImageFromFirestore() {
+            const imageContainer = document.getElementById('imageContainer');
+            
+            // Get the document from Firestore
+            db.collection("images").doc("YOUR_DOCUMENT_ID").get().then((doc) => {
+                if (doc.exists) {
+                    // Get the image URL from the document data
+                    const imageUrl = doc.data().imageUrl;
+
+                    // Create an <img> element
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageUrl;
+
+                    // Append the <img> element to the imageContainer
+                    imageContainer.appendChild(imgElement);
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+        }
+
+        // Call the function to fetch and display the image from Firestore
+        getImageFromFirestore();
+    </script>
+</body>
+</html>

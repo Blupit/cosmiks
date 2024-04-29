@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+<title>Cosmik</title>
+        <style>
+                /* CSS for rainbow animation */
+@keyframes rainbow {
+  0% { color: red; }
+  16% { color: orange; }
+  32% { color: yellow; }
+  48% { color: green; }
+  64% { color: blue; }
+  80% { color: indigo; }
+  100% { color: violet; }
+}
+
+/* Add rainbow animation to username with owner badge */
+#username.owner-badge {
+  animation: rainbow 3s linear infinite;
+}
+
+                 .banner { 
+                           position: absolute;
+
+                         margin-left: 650px;
+                         margin-top: 100px;
+    top: 0;
+    width: 400px;
+    height: 550px;
+    background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,255,0.5));
+    border-left: 4px solid rgba(0,0,255,0.5); /* Blue border */
+    border-top-right-radius: 10px; /* Rounded corner */
+    border-bottom-right-radius: 10px; /* Rounded corner */
+    overflow: hidden; /* Hide overflowing content */
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(0,0,255,0.5); /* Blue glow */
+    z-index: 999; /* Ensure it's above other elements */
+  }
+
+  /* Text inside the banner */
+  .banner-text {
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+         .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it's above all other content */
+  }
+
+  /* Styles for loading spinner */
+  .spinner {
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #333;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Hide content until loaded */
+  body {
+                background-image: url("https://ac.blooket.com/dashboard/assets/BlookCheckers-BykpA7vd.png");
+          
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Your existing HTML content goes here -->
+
+<script>
+           document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('Right-clicking is disabled on this website.');
+    });
+
+    // Prevent Ctrl + U
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            alert('Viewing page source is disabled on this website.');
+        }
+    });
+    window.addEventListener('devtoolschange', function(event) {
+        if (event.detail.isOpen) {
+            // Redirect to another page
+            window.location.replace("https://example.com/redirected-page");
+        }
+    });
+
+    // Function to detect if dev tools are open
+    function checkDevTools() {
+        let isOpen = false;
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        isOpen = widthThreshold || heightThreshold;
+
+        // Dispatch event indicating dev tools state
+        const event = new CustomEvent('devtoolschange', { detail: { isOpen } });
+        window.dispatchEvent(event);
+    }
+
+    // Check for dev tools periodically
+    setInterval(checkDevTools, 1000);
+window.addEventListener('load', function() {
+  // Remove loading overlay and show content
+  document.querySelector('.loading-overlay').style.display = 'none';
+  document.body.style.display = 'block';
+});
+</script>
+
+        <style>
+                 img[src*="Dev Badge.png"] {
+    width: 100px;
+  }
+  /* Your existing styles here */
+
+  /* Additional styles for spin the wheel popup */
+ .spin-wheel-popup {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .spin-wheel-popup h2 {
+    margin-bottom: 10px;
+  }
+
+  .spin-wheel-popup button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* Animation for spinning wheel */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .spin-wheel-img {
+    animation: spin 2s linear infinite;
+  }
+</style>
+</head>
+<body>
+
+
+
+
+<script>
+// Check if the user has the "plus.webp" badge
+function hasPlusBadge() {
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  return loggedInUser && loggedInUser.badges.includes("Plus.webp");
+}
+
+// Function to change name color and save it in localStorage
+function changeNameColor() {
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (loggedInUser) {
+    const newColor = prompt("Enter a new color for your name:");
+    if (newColor) {
+      loggedInUser.nameColor = newColor;
+      localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+      // Update displayed name color here (if applicable)
+      // For example, if the name is displayed in a <span> with id "username":
+      document.getElementById("username").style.color = newColor;
+    }
+  }
+}
+
+// Event listener for the button to change name color
+document.getElementById("changeNameColorBtn").addEventListener("click", function() {
+  if (hasPlusBadge()) {
+    changeNameColor();
+  } else {
+    alert("You need the 'plus.webp' badge to change name color.");
+  }
+});
+
+       
+
+        
+         document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('Right-clicking is disabled on this website.');
+    });
+
+    // Prevent Ctrl + U
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            alert('Viewing page source is disabled on this website.');
+        }
+    });
+    window.addEventListener('devtoolschange', function(event) {
+        if (event.detail.isOpen) {
+            // Redirect to another page
+            window.location.replace("https://example.com/redirected-page");
+        }
+    });
+
+    // Function to detect if dev tools are open
+    function checkDevTools() {
+        let isOpen = false;
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        isOpen = widthThreshold || heightThreshold;
+
+        // Dispatch event indicating dev tools state
+        const event = new CustomEvent('devtoolschange', { detail: { isOpen } });
+        window.dispatchEvent(event);
+    }
+
+    // Check for dev tools periodically
+    setInterval(checkDevTools, 1000);
+// Function to show spin the wheel popup
+function showSpinWheelPopup() {
+  // Check if user already spun the wheel today
+  const lastSpinDate = localStorage.getItem('lastSpinDate');
+  const currentDate = new Date().toDateString();
+  if (lastSpinDate === currentDate) {
+    alert('You can only spin the wheel once a day.');
+  } else {
+    document.getElementById('spinWheelPopup').style.display = 'block';
+  }
+}
+
+// Function to hide spin the wheel popup
+function hideSpinWheelPopup() {
+  document.getElementById('spinWheelPopup').style.display = 'none';
+}
+
+// Function to spin the wheel and win tokens
+function spinWheel() {
+  const lastSpinTime = localStorage.getItem('lastSpinTime');
+  const currentTime = new Date().getTime();
+  const eightHoursInMillis = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
+
+  if (!lastSpinTime || currentTime - lastSpinTime >= eightHoursInMillis) {
+    // Proceed with spinning
+    localStorage.setItem('lastSpinTime', currentTime);
+
+    // Simulate spinning animation (not actual random result)
+    const spinResult = Math.floor(Math.random() * 6); // Generate a random number from 0 to 5
+    const degrees = 360 * 5 + (spinResult * 60); // Calculate the degrees to rotate
+
+    // Rotate the wheel
+    const wheel = document.querySelector('.spin-wheel-img');
+    wheel.style.transition = 'transform 3s ease-out';
+    wheel.style.transform = `rotate(${degrees}deg)`;
+
+    // Wait for animation to finish
+    setTimeout(() => {
+      // Define token amounts won
+      const tokenOptions = [500, 600, 700, 800, 900, 1000];
+
+      // Select token won based on spin result
+      const selectedToken = tokenOptions[spinResult];
+
+      // Update user's token count and localStorage
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (user) {
+        user.tokens += selectedToken;
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        alert(`Congratulations! You won ${selectedToken} tokens.`);
+        hideSpinWheelPopup();
+      } else {
+        alert('User not logged in.');
+      }
+    }, 3000); // Wait for 3 seconds (duration of spin animation)
+  } else {
+    // Disable button or show a message indicating that the user needs to wait
+    alert('You can only spin the wheel once every 8 hours.');
+  }
+}
+</script>
+</script>
+<style>
+          .rainbow-text {
+    background-image: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: rainbow 2s linear infinite;
+  }
+
+  @keyframes rainbow {
+    0% {background-position: 0% 50%}
+    50% {background-position: 100% 50%}
+    100% {background-position: 0% 50%}
+  }
+  /* Your existing CSS styles here */
+
+  /* New styles for separate containers */
+  .user-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Adjust margin as needed */
+  }
+
+  .user-info-section {
+    margin-bottom: 20px; /* Adjust margin as needed */
+  }
+        .Logout{
+                border-radius: 15px;
+                border: none;
+                background-color: black;
+                height:50px;
+                width: 100px;
+                font-size: 20px;
+                color: purple;
+        }
+        
+</style>
+
+</head>
+<body>
+      
+
+<form style=" width:0px;" id="loginForm">
+  <!-- Your existing login form here -->
+</form>
+
+<div class="banner" style=" width: 500px;" id="userInfo" style="display: none;">
+  <p class="banner-text"><span style=" font-size: 25px;" id="loggedInUser"></span>!</p>
+  <img class="banner-text" style="width: 150px; margin-left: 165px;" src="" alt="Profile Picture" id="profileImg">
+  <div class="user-info-containe">
+    <!-- Separate containers for tokens, badges, and roles -->
+    <div class="user-info-section">
+      <p class="banner-text">Tokens: <span id="userTokens"></span></p>
+    </div>
+    <div class="user-info-section">
+      <p class="banner-text">Badges:</p>
+      <div class="banner-text" id="userBadges"></div>
+    </div>
+    <div class="user-info-section">
+      <p class="banner-text">Roles:</p>
+      <div class="banner-text"  id="userRoles"></div>
+    </div>
+     <li class="banner-text"><a href="Search Up User.html">View Stats of Users</a></li>
+
+  <a href="Login.html"><button class="Logout" id="logoutBtn">Logout</button><a>
+</div>
+        
+
+</div>  
+<div>                  </div>  
+
+<!-- Rest of your HTML code -->
+
+  <div style=" margin-top: 300px; background-color: Black;" id="popupDiv" class="input-popup">
+          <p>Owner Panel</p>
+  <button id="addTokenBtn" onclick="handleButtonClick(1)">Add Tokens</button>
+  <button  id="subtractTokenBtn" onclick="handleButtonClick(2)">Remove Tokens</button>
+  <button id="rainbowBtn" onclick="handleButtonClick(3)">Make Name Rainbow</button>
+  <button onclick="handleButtonClick(4)">Button 4</button>
+  <button onclick="handleButtonClick(5)">Button 5</button>
+</div>
+
+<script>
+// Sample user data
+const users = [
+  { username: "PrqYT", password: "Reset2211", profilePic: "Acient Panda.png", tokens: 10, roles: ["Owner"], badges: ["Staff Badge.png","Owner Badge.png","Tester Badge.png" ] },
+  { username: "ShadowBanana1", password: "Marcus2211", profilePic: "profile2.jpg", tokens: 15, roles: ["Staff"], badges: ["Staff Badge.png"] },
+  
+];
+
+// Login function
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  
+  const user = users.find(u => u.username === username && u.password === password);
+  if (user) {
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    displayUserInfo(user);
+  } else {
+    alert("Invalid username or password.");
+  }
+});
+
+// Display user info
+function displayUserInfo(user) {
+  document.getElementById("userInfo").style.display = "block";
+  document.getElementById("loggedInUser").textContent = user.username;
+  document.getElementById("profileImg").src = user.profilePic;
+  document.getElementById("userTokens").textContent = user.tokens;
+
+  // Display roles
+  const rolesContainer = document.getElementById("userRoles");
+  rolesContainer.innerHTML = "";
+  user.roles.forEach(role => {
+    const roleElement = document.createElement("span");
+    roleElement.textContent = role;
+    rolesContainer.appendChild(roleElement);
+  });
+
+  // Display badges
+  const badgesContainer = document.getElementById("userBadges");
+  badgesContainer.innerHTML = "";
+  user.badges.forEach(badge => {
+    const badgeElement = document.createElement("img");
+    badgeElement.src = badge;
+    badgeElement.style.width = "25px";
+    badgesContainer.appendChild(badgeElement);
+  });
+
+  document.getElementById("userStats").style.display = "block";
+}
+
+// Check if user is already logged in
+const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+if (loggedInUser) {
+  displayUserInfo(loggedInUser);
+}
+
+// Logout function
+document.getElementById("logoutBtn").addEventListener("click", function() {
+  localStorage.removeItem("loggedInUser");
+  location.reload();
+});
+
+// Token manipulation
+document.getElementById("addTokenBtn").addEventListener("click", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (user) {
+    user.tokens += 500;
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    document.getElementById("userTokens").textContent = user.tokens;
+  }
+});
+
+document.getElementById("subtractTokenBtn").addEventListener("click", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (user && user.tokens > 0) {
+    user.tokens -= 100;
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    document.getElementById("userTokens").textContent = user.tokens;
+  }
+});
+        // Event listener for keydown event
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'p' || event.key === 'P') {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (loggedInUser && loggedInUser.badges.includes("Staff Badge.png")) {
+      showPopupDiv(); // Call function to show the div with 5 buttons
+    }
+  }
+});
+
+// Function to show the div with 5 buttons
+function showPopupDiv() {
+  const popupDiv = document.getElementById('popupDiv');
+  popupDiv.style.display = 'block';
+}
+
+// Function to handle button clicks inside the popup div
+function handleButtonClick(buttonNumber) {
+  // Add your logic here for handling button clicks
+  console.log('Button ' + buttonNumber + ' clicked.');
+}
+      // Function to apply rainbow animation to the username
+function applyRainbowAnimation() {
+  const loggedInUserSpan = document.getElementById("loggedInUser");
+  loggedInUserSpan.classList.add("rainbow-animation");
+}
+
+// Event listener for the rainbow button
+document.getElementById("rainbowBtn").addEventListener("click", function() {
+  applyRainbowAnimation();
+});
+
+         // Add rainbow animation class if the username matches
+  // Check if developer tools are open
+const devtools = {
+  isOpen: false,
+  check: () => {
+    const startTime = performance.now();
+    debugger;
+    const endTime = performance.now();
+    if (endTime - startTime > 100) {
+      devtools.isOpen = true;
+    }
+  }
+};
+
+// Function to ban user and redirect
+function banAndRedirect() {
+  alert("Developer tools detected. You are banned and being redirected.");
+  window.location.href = "login.html"; // Redirect to login.html
+}
+
+// Check for developer tools
+devtools.check();
+if (devtools.isOpen) {
+  banAndRedirect();
+}
+</script>
+
+</body>
+</html>
+
+<title>Home</title>
+        <style>
+          /* Rainbow animation */
+@keyframes rainbow {
+  0% {
+    color: red;
+  }
+  16.666% {
+    color: orange;
+  }
+  33.333% {
+    color: yellow;
+  }
+  50% {
+    color: green;
+  }
+  66.666% {
+    color: blue;
+  }
+  83.333% {
+    color: indigo;
+  }
+  100% {
+    color: violet;
+  }
+}
+
+/* Apply the rainbow animation to the username */
+.rainbow-animation {
+  animation: rainbow 2s infinite;
+}
+
+  .badge-btn {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+  
+  <script>
+    // Function to unlock a badge
+    function unlockBadge(badgeNumber) {
+      localStorage.setItem(`badge${badgeNumber}`, 'unlocked');
+      document.getElementById('badgeBtn').style.display = 'inline-block';
+    }
+
+    // Check for unlocked badges in local storage
+    function checkForBadges() {
+      for (let i = 1; i <= 9; i++) {
+        if (localStorage.getItem(`badge${i}`) === 'unlocked') {
+          document.getElementById('badgeBtn').style.display = 'inline-block';
+          break;
+        }
+      }
+    }
+
+    // Event listener for unlocking badges
+    document.getElementById('unlockBtn').addEventListener('click', function() {
+      // Unlocking badge 1 for demonstration purposes
+      unlockBadge(1);
+    });
+
+    // Event listener for displaying badge button if badge is unlocked
+    document.addEventListener('DOMContentLoaded', function() {
+      checkForBadges();
+    });
+
+    // Event listener for showing the badge
+    document.getElementById('badgeBtn').addEventListener('click', function() {
+      document.querySelector('.badge-img').style.display = 'inline-block';
+    });
+  </script>
+</body>
+</html>
+<style>
+  /* Resetting default margin and padding */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  h1 {
+    margin-left: 25px;
+    font-size: 50px;
+    color: white;
+  }
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #800080 20%, #00008B 80%);
+    overflow: hidden;
+}
+ .sidebar {
+  border-radius: 10px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 200px;
+  background: linear-gradient(to bottom, #4b0082, #00008B); /* Updated gradient color */
+  padding-top: 20px;
+  z-index: 1; /* Ensure sidebar is above the wave background */
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  font-size: 20px; /* Adjusted font size */
+  display: block;
+  padding: 15px; /* Increased padding for better clickability */
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  background-color: #1E90FF; /* Updated hover background color */
+}
+
+h1 {
+  margin-left: 25px;
+  font-size: 40px; /* Adjusted font size */
+  color: white;
+}
+
+
+  .stats-board {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to bottom, #020202 20%,#87CEEB 80%);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 2; /* Ensure stats board is above the wave background */
+  }
+
+  .stats-board h2 {
+    margin-bottom: 10px;
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+
+  .stat-item {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 5px;
+  }
+     
+</style>
+</head>
+<body>
+
+<div class="wave-container">
+  <div class="wave"></div>
+</div>
+
+<div class="sidebar">
+  <ul>
+    <h1>Cosmik</h1>
+    <li><a href="#">Home</a></li>
+    <li><a href="Market.html">Market</a></li>
+    <li><a href="Chat.html">Chat</a></li>          
+    <li><a href="Cosmetics Rewrite.html">Cosmetics</a></li>
+    <li><a href="Credits.html">Credits</a></li>
+    <li><a href="#">Shop</a></li>
+    <li><a href="Settings Rewrite.html">Settings</a></li>
+	<li><a href="#" onclick="showSpinWheelPopup()">Spin the Wheel</a></li>
+
+         <div id="spinWheelPopup" class="spin-wheel-popup">
+  <img class="spin-wheel-img" src="loading.gif" alt="Spin Wheel">
+  <button onclick="spinWheel()">Spin</button>
+  <button onclick="hideSpinWheelPopup()">Close</button>
+</div> 
+
+</div>
+
+   
+
+  <a href="Discord.com"><img style=" width: 40px;" src="Discord Logo 1.png" alt="Italian Trulli"></a>
+                <a href="Search Up User.html"><img style=" width: 40px;" src="Trophy icon.jpg" alt="Italian Trulli"></a>
+                        <a href="Settings Rewrite.html"><img style=" width: 45px;" src="Settings icon.png" alt="Italian Trulli"></a>
+                        <a href="Discord.com"><img style=" width: 40px;" src="Chat Icon.png" alt="Italian Trulli"></a>
+</div>
+
+        
+
+</div>
+
+<style>
+        p{
+                color: white;
+                font-size: 15px;
+        }
+  /* Styles for the resizable div */
+  .resizable-div {
+    width: 200px;
+    height: 200px;
+    background-color: lightblue;
+    resize: both;
+    overflow: auto;
+    position: absolute;
+  }
+
+  /* Styles for the buttons inside the resizable div */
+  .resizable-div button {
+    display: block;
+    margin: 5px;
+    padding: 10px;
+  }
+
+  /* Styles for the input box */
+  .input-popup {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+</style>
+</head>
+       
+<title>Market</title>
+<style>
+  /* Your existing styles here */
+
+  /* Additional styles for card container */
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    text-align: center;
+  }
+
+  .card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<!-- Your existing HTML content -->
+
+
+<!-- Your existing HTML content -->
+
+<script>
+// Define rarities and their chances
+const rarities = [
+  { name: "Common", chance: 50 },
+  { name: "Rare", chance: 10 },
+  { name: "Epic", chance: 5 },
+  { name: "Legendary", chance: 1 },
+  { name: "Chroma", chance: 0.01 },
+  { name: "Cosmik", chance: 0.001 }
+];
+
+// Define items for each rarity
+const itemsByRarity = {
+  "Common": ["Common Item 1", "Common Item 2", "Common Item 3"],
+  "Rare": ["Rare Item 1", "Rare Item 2"],
+  "Epic": ["Epic Item 1", "Epic Item 2", "Epic Item 3"],
+  "Legendary": ["Legendary Item"],
+  "Chroma": ["Chroma Item"],
+  "Cosmik": ["Cosmik Item"]
+};
+
+// Function to randomly select an item based on its rarity
+function selectItemByRarity(rarity) {
+  const items = itemsByRarity[rarity];
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+// Function to buy a pack
+function buyPack() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (user && user.tokens >= 100) {
+    // Deduct tokens
+    user.tokens -= 100;
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+    // Get items from the pack
+    const itemsFromPack = [];
+    for (const rarity of rarities) {
+      if (Math.random() < rarity.chance / 100) {
+        const selectedItem = selectItemByRarity(rarity.name);
+        itemsFromPack.push(selectedItem);
+      }
+    }
+
+    // Display items obtained from the pack
+    const cardContainer = document.getElementById("cardContainer");
+    cardContainer.innerHTML = "";
+    itemsFromPack.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<img src="item_image.png" alt="${item}"><p>${item}</p>`;
+      cardContainer.appendChild(card);
+    });
+  } else {
+    alert("Insufficient tokens to buy a pack.");
+  }
+}
+        // Login function
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  
+  const user = users.find(u => u.username === username && u.password === password);
+  if (user) {
+    if (user.banned) {
+      document.getElementById("errorMessage").innerText = "You are banned. if you think this is a mistake DM prq for an answer";
+    } else {
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+      // Add rainbow animation class if the username matches
+      if (username === "PrqYT" || username === "ChezyBred") {
+        document.getElementById("username").classList.add("rainbow-text");
+      }
+      // Check if user has "Owner.png" badge
+      if (user.badges.includes("Owner.png")) {
+        document.getElementById("username").classList.add("owner-badge");
+      }
+      window.location.href = "index.html"; // Redirect to dashboard.html upon successful login
+    }
+  } else {
+    document.getElementById("errorMessage").innerText = "Invalid username or password.";
+  }
+});
+
+</script>
+
+</body>
+</html>
+
+<body>
+
+
+</body>
+</html>
